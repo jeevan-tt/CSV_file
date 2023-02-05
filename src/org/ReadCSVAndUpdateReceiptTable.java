@@ -67,12 +67,15 @@ public class ReadCSVAndUpdateReceiptTable {
 					} catch (NumberFormatException e) {
 
 						receiptdto = new Receipt();
+						receiptdto.setWid(wid);
+						receiptdto.setQuantity(quantity);
 						if (!StringUtils.isNullOrEmpty(marketValueStr)) {
 							receiptdto.setMarketValueStr(marketValueStr);
 						}
 						if (!StringUtils.isNullOrEmpty(unitValueStr)) {
 							receiptdto.setUnitValueStr(unitValueStr);
 						}
+						receiptdto.setMarketPrice(marketPrice);
 						if (null != receiptdto) {
 							datTypeMisMatchReceiptTable.add(receiptdto);
 						}
@@ -115,11 +118,8 @@ public class ReadCSVAndUpdateReceiptTable {
 			try (FileWriter writer = new FileWriter("wids_not_present_in_receipt_table.txt")) {
 				if (!notPresentInReceiptTable.isEmpty()) {
 
-					// try (FileWriter writer = new
-					// FileWriter("wids_not_present_in_receipt_table.txt")) {
-
 					writer.append(
-							"We found these many WId have mismatch kindly upload file which has downloaded and chenge only Recipt value");
+							"We found these many wid, quantity, unit have mismatch kindly upload file which has downloaded and chenge only Recipt value");
 					writer.append("\n");
 					writer.append(String.valueOf("wid		quantity		 unit"));
 					for (Receipt misMatch : notPresentInReceiptTable) {
@@ -135,45 +135,56 @@ public class ReadCSVAndUpdateReceiptTable {
 							writer.append("\t\t");
 							writer.append("\n");
 						}
-						System.out.println("Error report is generated");
 
 					}
-					// }
+					System.out.println("Error report is generated -- data misMathch");
+
 				}
 				if (!datTypeMisMatchReceiptTable.isEmpty()) {
-					// try (FileWriter writer = new
-					// FileWriter("wids_not_present_in_receipt_table.txt")) {
 
-					writer.append("---RECIPT SHOULD HAVE VALUE FROM 1- 99999999999999 and only numeric is allowed----"
-							+ "\n");
-					writer.append(String.valueOf("wid		quantity		 unit \n"));
+					writer.append(
+							"---RECIPT SHOULD HAVE VALUE FROM 1- 99999999999999 and only numeric is allowed, never be a blank----"
+									+ "\n");
+					writer.append(String.valueOf("wid		quantity		 unit		 market_Price\n"));
 					for (Receipt misMatch : datTypeMisMatchReceiptTable) {
 						if (!StringUtils.isNullOrEmpty(misMatch.getMarketValueStr())) {
 
 							writer.append(String.valueOf(misMatch.getWid()));
 							writer.append("\t\t");
-							if (!(StringUtils.isNullOrEmpty(misMatch.getMarketValueStr()))) {
-								writer.append(String.valueOf(misMatch.getMarketValueStr()));
+							writer.append(String.valueOf(misMatch.getQuantity()));
+							writer.append("\t\t");
+
+							if (!(StringUtils.isNullOrEmpty(misMatch.getUnitValueStr()))) {
+								writer.append(String.valueOf(misMatch.getUnitValueStr()));
+								writer.append("\t\t");
 								writer.append("\t\t");
 
 							}
+							
+							if (!(StringUtils.isNullOrEmpty(misMatch.getMarketValueStr()))) {
+								writer.append(String.valueOf(misMatch.getMarketValueStr()));
+								writer.append("\t\t");
+							} else {
+								writer.append("\t\t");
+								
+							}
+
+							/* writer.append(String.valueOf(misMatch.getMarketPrice())); */
+
 						}
 						writer.append("\n");
 
 					}
-					System.out.println("Error report is generated");
-					// }
+					System.out.println("Error report is generated - blank and dataType type  ");
+
 				}
 				if (!blankContentReceiptTable.isEmpty()) {
-					// try (FileWriter writer = new
-					// FileWriter("wids_not_present_in_receipt_table.txt")) {
 
 					writer.append("---We found the blank values, kindly fill the appropriate values----" + "\n");
 					writer.append(String.valueOf("wid		quantity		 unit		 market_price" + "\n"));
 					for (Receipt misMatch : blankContentReceiptTable) {
 						if (null != (misMatch.getBlankDetails())) {
 
-							// writer.append();
 							for (int i = 0; i < misMatch.blankDetails.length; i++) {
 								writer.append(misMatch.blankDetails[i] + "\t\t");
 
@@ -182,10 +193,9 @@ public class ReadCSVAndUpdateReceiptTable {
 						}
 
 					}
-					System.out.println("Error report is generated");
+					System.out.println("Error report is generated blank 2");
 				}
 
-				// }
 			}
 
 		} finally {
