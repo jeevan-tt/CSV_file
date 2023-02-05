@@ -1,0 +1,22 @@
+We found these many WId have mismatch kindly upload file which has downloaded and chenge only Recipt value
+wid		quantity		 unit
+5		11			30 kg		
+---RECIPT SHOULD HAVE VALUE FROM 1- 99999999999999 and only numeric is allowed----
+wid		quantity		 unit 
+0		A		
+0		A		
+0		A		
+---We found the blank values, kindly fill the appropriate values----
+wid		quantity		 unit		 market_price
+9		50 kg		90		
+10		55 kg		100		
+11		60 kg		110		
+12		65 kg		120		
+13		70 kg		130		
+14		75 kg		140		
+15		80 kg		150		
+16		85 kg		160		
+17		90 kg		170		
+18		95 kg		180		
+19		100 kg		190		
+20		105 kg		200		
