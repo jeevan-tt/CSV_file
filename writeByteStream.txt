@@ -1,0 +1,38 @@
+import java.io.ByteArrayOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+
+...
+
+try (FileWriter writer = new FileWriter("receipts.csv");
+     ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+
+    writer.append("wid");
+    writer.append(",");
+    writer.append("quantity");
+    writer.append(",");
+    writer.append("unit");
+    writer.append(",");
+    writer.append("market_price");
+    writer.append("\n");
+    for (Receipt receipt : receipts) {
+        writer.append(String.valueOf(receipt.wid));
+        writer.append(",");
+        writer.append(receipt.quantity);
+        writer.append(",");
+        writer.append(String.valueOf(receipt.unit));
+        writer.append(",");
+        writer.append(String.valueOf(receipt.marketPrice));
+        writer.append("\n");
+    }
+    writer.flush();
+    baos.write(writer.toString().getBytes());
+    byte[] data = baos.toByteArray();
+
+} catch (IOException e) {
+    try (FileWriter errorWriter = new FileWriter("error_report.txt")) {
+        errorWriter.write(e.getMessage());
+    } catch (IOException ioe) {
+        System.out.println("Error writing to error report: " + ioe.getMessage());
+    }
+}
